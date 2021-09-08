@@ -124,8 +124,8 @@ def plot_slopes(histplots, lowlim, upplim, mcmc_fits, starbins,
                     y=histplots[i][0][q], 
                     marker='o', c=cinds[i],
                     s=100, edgecolor='k', 
-                    label='{} $\pm$ {}'.format(np.round(mcmc_fits[i][0],2),
-                                               np.round(mcmc_fits[i][1], 2)),
+                    label='{} $\pm$ {}'.format(np.round(mcmc_fits[i][0],3),
+                                               np.round(mcmc_fits[i][1], 3)),
                     zorder=100)
         
         ax1.fill_between(histplots[i][1][1:][q],

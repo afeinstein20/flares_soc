@@ -112,7 +112,7 @@ def log_likelihood(theta, x, y, yerr1, yerr2):
 def run_mcmc(x, y, lowlim, upplim, initguess, nwalkers=300, nsteps=5000, mask=None,
              plot_chains=True, plot_corner=True):
 
-    q = y > 0
+    q = y[mask] > 0
 
     pos = np.array([initguess[0], np.log10(initguess[1])]) + 1e-4 * np.random.randn(nwalkers,2)
     nwalkers, ndim = pos.shape
@@ -121,10 +121,10 @@ def run_mcmc(x, y, lowlim, upplim, initguess, nwalkers=300, nsteps=5000, mask=No
         mask = np.arange(0,len(y)-1,1,dtype=int)
 
     sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability,
-                                    args=(np.log10(x[1:][q][mask]),
-                                          np.log10(y[q][mask]),
-                                          np.log10(lowlim[q][mask])-np.log10(y[q][mask]),
-                                          np.log10(y[q][mask])-np.log10(upplim[q][mask])
+                                    args=(np.log10(x[1:][mask][q]),
+                                          np.log10(y[mask][q]),
+                                          np.log10(lowlim[mask][q])-np.log10(y[mask][q]),
+                                          np.log10(y[mask][q])-np.log10(upplim[mask][q])
                                          )
                                    )
     sampler.run_mcmc(pos, nsteps,progress=True)

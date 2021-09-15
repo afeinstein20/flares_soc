@@ -39,12 +39,15 @@ def parula_cmap(histplots):
     return parula, cinds, oppo
     
 
-def plot_hr(stars, ruwe_cutoff=1.4, save=True, outputname='ruwe_hr.pdf'):
+def plot_hr(stars, ruwe_cutoff=1.4, save=True, outputname='ruwe_hr.pdf',
+            flaresvmin=0, flaresvmax=1, plot_ruwe=True):
     
     cmd_bprp, cmd_mg, cmd_mass, cmd_teff = read_mamajek()
 
-    fig, (ax2, ax1) = plt.subplots(nrows=2, figsize=(16,16), 
-                                   sharex=True, sharey=True)
+    if plot_ruwe:
+        fig, (ax2, ax1) = plt.subplots(nrows=2, figsize=(16,16), 
+                                       sharex=True, sharey=True)
+
     fig.set_facecolor('w')
 
     cm = flarerate_cmap()
@@ -72,7 +75,8 @@ def plot_hr(stars, ruwe_cutoff=1.4, save=True, outputname='ruwe_hr.pdf'):
                      absmag,
                      c=stars['N_flares_per_day'],
                      s=5, 
-                     vmin=0, vmax=0.5,
+                     vmin=flaresvmin, 
+                     vmax=flaresvmax,
                      cmap=cm.reversed(), zorder=3)
     fig.colorbar(im, ax=ax2, label='Flare Rate [day$^{-1}$]')
 
@@ -151,7 +155,7 @@ def plot_slopes(histplots, lowlim, upplim, mcmc_fits, starbins,
                  c=cinds[i])
     ax2.yaxis.tick_right()
     ax2.set_yticklabels(starbins)
-    ax2.set_ylim(0,5)
+    ax2.set_ylim(0,len(cinds))
     ax2.yaxis.set_label_position("right")
     ax2.set_ylabel('Mass [M$_\odot$]')
     

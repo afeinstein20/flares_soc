@@ -40,7 +40,7 @@ def power_law_resid(args, x, y, num):
 ## FUNCTIONS FOR INIT GUESS ##
 ##############################
 
-def amp_slope_fit(data, bins, i=0, j=-1, plot=True):
+def amp_slope_fit(data, bins, i=0, j=-1, plot=True, get_err=True):
     
     n, _ = np.histogram(data['amp']*100, bins=bins)
     y, binedges, _ = plt.hist(data['amp']*100, bins=bins,
@@ -66,11 +66,12 @@ def amp_slope_fit(data, bins, i=0, j=-1, plot=True):
                              n[q][i:j-1], 
                              np.sqrt(n[q][i:j-1]) ),
                        full_output=True)
-
-    fit_params = results2[0]
     
-    slope_err = np.sqrt(results2[1][0][0])
+    fit_params = results2[0]
 
+    if get_err:
+        slope_err = np.sqrt(results2[1][0][0])
+        
     model = linear([fit_params[0], np.log10(fit_params[1])], logx)
 
     if plot:
@@ -81,7 +82,10 @@ def amp_slope_fit(data, bins, i=0, j=-1, plot=True):
                                    np.round(slope_err,2)))
         plt.show()
 
-    return fit_params[0], slope_err, n, results.x[1]
+    if get_err:
+        return fit_params[0], slope_err, n, results.x[1]
+    else:
+        return fit_params[0], n, results.x[1]
 
 
 #############################
@@ -153,8 +157,12 @@ def run_mcmc(x, y, lowlim, upplim, initguess, nwalkers=300, nsteps=5000, mask=No
                              truths=[initguess[0], initguess[1]])
         plt.show()
 
-    for j in range(ndim-1):
-        mcmc = np.percentile(flat_samples[:, j], [16, 50, 84])
-        q = np.diff(mcmc)
 
-    return flat_samples, [mcmc[1], q[0], q[1]]
+    mcmc_slope = np.percentile(flat_samples[:, 0], [16, 50, 84])
+    q = np.diff(mcmc_slope)
+
+    mcmc_offset = np.percentile(flat_samples[:, 1], [16, 50, 84])
+    qo = np.diff(mcmc_offset)
+        
+
+    return flat_samples, [mcmc_slope[1], q[0], q[1]], [mcmc_offset[1], qo[0], qo[1]]

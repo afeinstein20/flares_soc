@@ -48,3 +48,29 @@ def dist_to_ms(stars, starbins):
     model = np.poly1d(fit)
 
     return model
+
+def dist_to_giant(stars, allflares, ms_dist, ms_dist_all):
+    
+    giants = np.zeros(len(stars))
+    giants[(ms_dist > 4) & 
+           (stars['M_G'] < 3) & 
+           (stars['M_G'] > -2) &
+           (stars['bp_rp']>1) ] = 1
+    g = giants == 1
+
+    list1, list2 = zip(*sorted(zip(stars['bp_rp'][g], stars['M_G'][g])))
+
+    gfit = np.polyfit(list1, list2, deg=2)
+    gmodel = np.poly1d(gfit)
+    
+    g_dist = np.abs(stars['M_G'] - gmodel(stars['bp_rp']))
+    g_dist_all = np.abs(allflares['M_G']-gmodel(allflares['bp_rp']))
+    g_dist[ms_dist < 5] = 10
+    g_dist[stars['bp_rp']<0]=10
+    g_dist[g_dist > 3] = 10 
+    
+    g_dist_all[ms_dist_all < 5] = 10
+    g_dist_all[allflares['bp_rp']<0]=10
+    g_dist_all[g_dist_all > 3] = 10 
+    
+    return g_dist, g_dist_all

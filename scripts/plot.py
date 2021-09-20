@@ -30,6 +30,17 @@ def ruwe_cmap():
     cm = make_cmap(clist1, name='ocean')
     return cm
 
+def present_cmap():
+    clist1 = np.array(['FFFFFF', '8cb0ca','487b96','182436'])
+    cm = make_cmap(clist1, name='misc')
+    return cm
+
+def discrete_cmap():
+    clist1 = np.array(['#60374c', '#a96388', '#c49ab6', 
+                       '#8cb0ca', '#487b96', '#3e6474'])
+    return 0, clist1, 0
+
+
 def parula_cmap(histplots):
     parula = np.load('/Users/arcticfox/parula_colors.npy')
     parulacmap = LinearSegmentedColormap.from_list('sequential',

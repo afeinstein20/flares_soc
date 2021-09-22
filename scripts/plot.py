@@ -33,7 +33,10 @@ def ruwe_cmap():
 def present_cmap():
     clist1 = np.array(['FFFFFF', '8cb0ca','487b96','182436'])
     cm = make_cmap(clist1, name='misc')
-    return cm
+
+    clist2 = np.array(['FFFFFF', '#c49ab6', '#a96388', '#60374c'])
+    cm2 = make_cmap(clist2, name='misc2')
+    return cm, cm2
 
 def discrete_cmap():
     clist1 = np.array(['#60374c', '#a96388', '#c49ab6', 
